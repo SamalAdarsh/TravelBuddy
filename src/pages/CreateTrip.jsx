@@ -1,12 +1,13 @@
 import { BUDGET_OPTIONS, TRAVELLER_OPTIONS } from "@/assets/data";
 import { placesApiKey } from "@/lib/Constants";
 import { ArrowRight, Calendar, CheckCircle } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { toast } from "sonner";
 
 const CreateTrip = () => {
   const [step, setStep] = useState(1);
-  const [lodaing, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     destination: null,
     noOfDays: "",
@@ -37,13 +38,27 @@ const CreateTrip = () => {
   }
 
   const generateTrip = ()=>{
+    
+    if(!formData.destination || !formData.noOfDays || !formData.budget || !formData.traveller){
 
+         toast.error("Please fill all the details");
+    }
+
+    if(formData.noOfDays > 7){
+        toast.error("AI can currently generate upto 7 days only.")
+    }
+
+    setLoading(true)
+
+    console.log(formData)
 
   }
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
+  
+
+//   useEffect(() => {
+//     console.log(formData);
+//   }, [formData]);
 
   //Planner Form View
   return (
