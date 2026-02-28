@@ -1,3 +1,4 @@
+import { placesApiKey } from "@/lib/Constants";
 import React, { useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
@@ -10,6 +11,8 @@ const CreateTrip = () => {
     traveller: "",
     budget: "",
   });
+
+  
 
   //Planner Form View
   return (
@@ -49,7 +52,9 @@ const CreateTrip = () => {
                             <label htmlFor="">
                                 Destination
                             </label>
-                            <GooglePlacesAutocomplete/>
+                            <GooglePlacesAutocomplete
+                             apiKey={placesApiKey}
+                            />
                         </div>
 
                     </div>
