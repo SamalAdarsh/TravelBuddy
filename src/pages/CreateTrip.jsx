@@ -1,6 +1,6 @@
 import { BUDGET_OPTIONS, TRAVELLER_OPTIONS } from "@/assets/data";
 import { placesApiKey } from "@/lib/Constants";
-import { ArrowRight, Calendar, CheckCircle } from "lucide-react";
+import { ArrowRight, Calendar, CheckCircle, Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { toast } from "sonner";
@@ -22,43 +22,49 @@ const CreateTrip = () => {
     });
   };
 
-  const handleBack = ()=>{
+  const handleBack = () => {
+    if (step > 1) setStep(step - 1);
+  };
 
-    if(step > 1) setStep(step-1)
+  const handleNext = () => {
+    if (step < 3) setStep(step + 1);
+    else generateTrip();
+  };
 
-
-  }
-
-  const handleNext = ()=>{
-
-    if(step<3) setStep(step + 1)
-    else generateTrip()
-
-
-  }
-
-  const generateTrip = ()=>{
-    
-    if(!formData.destination || !formData.noOfDays || !formData.budget || !formData.traveller){
-
-         toast.error("Please fill all the details");
+  const generateTrip = () => {
+    if (
+      !formData.destination ||
+      !formData.noOfDays ||
+      !formData.budget ||
+      !formData.traveller
+    ) {
+      toast.error("Please fill all the details");
     }
 
-    if(formData.noOfDays > 7){
-        toast.error("AI can currently generate upto 7 days only.")
+    if (formData.noOfDays > 7) {
+      toast.error("AI can currently generate upto 7 days only.");
     }
 
-    setLoading(true)
+    setLoading(true);
 
-    console.log(formData)
+    console.log(formData);
+  };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flexCenter flex-col  p-4">
+        <div className="relative">
+          <div className=" absolute inset-0 bg-indigo-200 rounded-full animate-ping opacity-25" />
+          <div className="relative bg-white p-4 rounded-full shadow-xl">
+            <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
+          </div>
+        </div>
+        <h3 className="mt-8 text-gray-900">Curating your trip to {formData.destination?.label?.split(',')[0]}...</h3>
+        <p className="mt-2 text-gray-500 animate-pulse">Our AI is finding the best stays and hidden gems...</p>
+      </div>
+    );
   }
 
-  
-
-//   useEffect(() => {
-//     console.log(formData);
-//   }, [formData]);
 
   //Planner Form View
   return (
@@ -181,13 +187,28 @@ const CreateTrip = () => {
 
           {/* Navigation */}
           <div className="flexBetween pt-6 border-t border-gray-100">
-
-            <button onClick={handleBack} className={`text-gray-500 hover:text-gray-900 font-medium px-4 py-2 ${step === 1 && 'invisible'}`}>
-                Back
+            <button
+              onClick={handleBack}
+              className={`text-gray-500 hover:text-gray-900 font-medium px-4 py-2 ${step === 1 && "invisible"}`}
+            >
+              Back
             </button>
-            <button onClick={handleNext} disabled={(step === 1 && !formData.destination) || (step === 1 && !formData.noOfDays) || (step === 2 && !formData.budget) || (step === 3 && !formData.traveller)} className={`flex items-center px-8 py-3 rounded-xl font-bold text-white transition-all shadow-lg ${(step === 1 && !formData.destination) || (step === 1 && !formData.noOfDays) || (step === 2 && !formData.budget) || (step === 3 && !formData.traveller) ? 'bg-gray-300 cursor-not-allowed':'bg-indigo-600 hover:bg-indigo-700 active:scale-95'}`}>
-                {step===3 ? "Generate Plan" : "Continue"}
-                {step===3 ? <CheckCircle className="ml-2 w-5 h-5"/> : <ArrowRight className="ml-2 w-5 h-5"/>}
+            <button
+              onClick={handleNext}
+              disabled={
+                (step === 1 && !formData.destination) ||
+                (step === 1 && !formData.noOfDays) ||
+                (step === 2 && !formData.budget) ||
+                (step === 3 && !formData.traveller)
+              }
+              className={`flex items-center px-8 py-3 rounded-xl font-bold text-white transition-all shadow-lg ${(step === 1 && !formData.destination) || (step === 1 && !formData.noOfDays) || (step === 2 && !formData.budget) || (step === 3 && !formData.traveller) ? "bg-gray-300 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700 active:scale-95"}`}
+            >
+              {step === 3 ? "Generate Plan" : "Continue"}
+              {step === 3 ? (
+                <CheckCircle className="ml-2 w-5 h-5" />
+              ) : (
+                <ArrowRight className="ml-2 w-5 h-5" />
+              )}
             </button>
           </div>
         </div>
