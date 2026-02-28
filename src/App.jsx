@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./components/shared/Header";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
+import CreateTrip from "./pages/CreateTrip";
 
 const App = () => {
   return (
@@ -9,6 +10,7 @@ const App = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/create-trip" element={<CreateTrip />} />
       </Routes>
     </>
   );
