@@ -1,4 +1,5 @@
 import { BUDGET_OPTIONS, traveler_OPTIONS } from "@/assets/data";
+import LoginDialog from "@/components/shared/LoginDialog";
 import { placesApiKey } from "@/lib/constants";
 import { generateTripWithAI } from "@/services/AIModel";
 import { ArrowRight, Calendar, CheckCircle, Loader2 } from "lucide-react";
@@ -7,6 +8,7 @@ import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { toast } from "sonner";
 
 const CreateTrip = () => {
+ const[openDialog, setOpenDialog] = useState(false);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -33,6 +35,12 @@ const CreateTrip = () => {
   };
 
   const generateTrip = async () => {
+
+    const user = localStorage.getItem("user");
+
+    if(!user){
+        return setOpenDialog(true);
+    }
     if (
       !formData.destination ||
       !formData.noOfDays ||
@@ -48,18 +56,19 @@ const CreateTrip = () => {
 
     setLoading(true);
 
-    console.log(formData);
+    // console.log(formData);
 
     const DYNAMIC_PROMPT = `Generate a travel plan for Location: ${formData?.destination?.label} for ${formData?.noOfDays} days for a ${formData?.traveler} traveler on ${formData?.budget} budget. Return the result strictly as a single JSON object using camelCase keys, the travel plan with trip note and must feature hotelsOptions array, each hotel with hotelName, hotelAddress, priceRange, imageUrl, rating, description, and a coordinates, alongside an itinerary array of daily plans. Each day must include a dayNumber, theme, and an activities array, where each activity contains activityName, description, imageUrl, ticketPrice, timeRange, timeToTravel and coordinates`;
 
     try{
 
        const tripData = await generateTripWithAI(DYNAMIC_PROMPT)
+        setLoading(false)
     }
 
     catch (error)
     {
-           setLoading(false)
+          
            console.log("AI Error:", error)
            toast.error(error.message?.includes('429') ? "Rate limit hit! wait 60s." : "Generation failed.");
 
@@ -229,6 +238,7 @@ const CreateTrip = () => {
           </div>
         </div>
       </div>
+      <LoginDialog open={openDialog} onClose={()=>setOpenDialog(false)}/>
     </div>
   );
 };

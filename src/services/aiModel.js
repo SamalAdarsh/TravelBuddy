@@ -217,9 +217,14 @@ export async function generateTripWithAI(DYNAMIC_PROMPT) {
 
     const textResponse = response.text;
 
-    console.log("Chat response:", textResponse);
+    // console.log("Chat response:", textResponse);
+
+    //Cleaning the String: remove.markdown JSON formatting if the AI includes it
+    const cleanResponse = textResponse.replace(/```json|```/g, "").trim()
+    // console.log("Clean response:", cleanResponse);
+
   } catch (error) {
     console.error("Error generating trip:", error);
-    throw error;
+    throw error
   }
 }
