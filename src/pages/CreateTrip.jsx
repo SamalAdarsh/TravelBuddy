@@ -1,5 +1,6 @@
-import { BUDGET_OPTIONS, TRAVELLER_OPTIONS } from "@/assets/data";
-import { placesApiKey } from "@/lib/Constants";
+import { BUDGET_OPTIONS, traveler_OPTIONS } from "@/assets/data";
+import { placesApiKey } from "@/lib/constants";
+import { generateTripWithAI } from "@/services/AIModel";
 import { ArrowRight, Calendar, CheckCircle, Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
@@ -11,7 +12,7 @@ const CreateTrip = () => {
   const [formData, setFormData] = useState({
     destination: null,
     noOfDays: "",
-    traveller: "",
+    traveler: "",
     budget: "",
   });
 
@@ -31,12 +32,12 @@ const CreateTrip = () => {
     else generateTrip();
   };
 
-  const generateTrip = () => {
+  const generateTrip = async () => {
     if (
       !formData.destination ||
       !formData.noOfDays ||
       !formData.budget ||
-      !formData.traveller
+      !formData.traveler
     ) {
       toast.error("Please fill all the details");
     }
@@ -48,6 +49,21 @@ const CreateTrip = () => {
     setLoading(true);
 
     console.log(formData);
+
+    const DYNAMIC_PROMPT = `Generate a travel plan for Location: ${formData?.destination?.label} for ${formData?.noOfDays} days for a ${formData?.traveler} traveler on ${formData?.budget} budget. Return the result strictly as a single JSON object using camelCase keys, the travel plan with trip note and must feature hotelsOptions array, each hotel with hotelName, hotelAddress, priceRange, imageUrl, rating, description, and a coordinates, alongside an itinerary array of daily plans. Each day must include a dayNumber, theme, and an activities array, where each activity contains activityName, description, imageUrl, ticketPrice, timeRange, timeToTravel and coordinates`;
+
+    try{
+
+       const tripData = await generateTripWithAI(DYNAMIC_PROMPT)
+    }
+
+    catch (error)
+    {
+           setLoading(false)
+           console.log("AI Error:", error)
+           toast.error(error.message?.includes('429') ? "Rate limit hit! wait 60s." : "Generation failed.");
+
+    }
   };
 
   if (loading) {
@@ -159,7 +175,7 @@ const CreateTrip = () => {
               </div>
             )}
 
-            {/* Step 3: Traveller Type */}
+            {/* Step 3: traveler Type */}
             {step === 3 && (
               <div className="space-y-8">
                 <div className="text-center">
@@ -167,11 +183,11 @@ const CreateTrip = () => {
                   <p>Customize your experience based on your company.</p>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 pt-2">
-                  {TRAVELLER_OPTIONS.map((opt) => (
+                  {traveler_OPTIONS.map((opt) => (
                     <button
                       key={opt.id}
-                      onClick={() => handleInputChange("traveller", opt.id)}
-                      className={`p-4 rounded-xl border-2 transition-all flexCenter flex-col gap-3 ${formData.traveller === opt.id ? "border-indigo-600 bg-indigo-50 shadow-md sacle-105" : "border-gray-100 hover:border-indigo-200"}`}
+                      onClick={() => handleInputChange("traveler", opt.id)}
+                      className={`p-4 rounded-xl border-2 transition-all flexCenter flex-col gap-3 ${formData.traveler === opt.id ? "border-indigo-600 bg-indigo-50 shadow-md sacle-105" : "border-gray-100 hover:border-indigo-200"}`}
                     >
                       <span className="text-3xl">{opt.icon}</span>
                       <div>
@@ -199,9 +215,9 @@ const CreateTrip = () => {
                 (step === 1 && !formData.destination) ||
                 (step === 1 && !formData.noOfDays) ||
                 (step === 2 && !formData.budget) ||
-                (step === 3 && !formData.traveller)
+                (step === 3 && !formData.traveler)
               }
-              className={`flex items-center px-8 py-3 rounded-xl font-bold text-white transition-all shadow-lg ${(step === 1 && !formData.destination) || (step === 1 && !formData.noOfDays) || (step === 2 && !formData.budget) || (step === 3 && !formData.traveller) ? "bg-gray-300 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700 active:scale-95"}`}
+              className={`flex items-center px-8 py-3 rounded-xl font-bold text-white transition-all shadow-lg ${(step === 1 && !formData.destination) || (step === 1 && !formData.noOfDays) || (step === 2 && !formData.budget) || (step === 3 && !formData.traveler) ? "bg-gray-300 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700 active:scale-95"}`}
             >
               {step === 3 ? "Generate Plan" : "Continue"}
               {step === 3 ? (

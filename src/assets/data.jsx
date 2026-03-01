@@ -6,7 +6,7 @@ export const BUDGET_OPTIONS = [
   { id: 'Luxury', label: 'Luxury', icon: <div className="flex"><DollarSign className="w-4 h-4" /><DollarSign className="w-4 h-4" /><DollarSign className="w-4 h-4" /></div> },
 ];
 
-export const TRAVELLER_OPTIONS = [
+export const traveler_OPTIONS = [
   { id: 'Solo', title: 'Solo Traveler', icon: '🧗', desc: 'Exploring at your own pace' },
   { id: 'Couple', title: 'Couple', icon: '👩‍❤️‍👨', desc: 'Romantic getaways' },
   { id: 'Family', title: 'Family', icon: '👨‍👩‍👧‍👦', desc: 'Kid-friendly activities' },
