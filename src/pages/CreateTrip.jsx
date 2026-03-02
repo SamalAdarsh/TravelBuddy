@@ -6,11 +6,15 @@ import { ArrowRight, Calendar, CheckCircle, Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { toast } from "sonner";
+import { doc, setDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { db } from "@/services/firebaseConfig";
 
 const CreateTrip = () => {
- const[openDialog, setOpenDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     destination: null,
     noOfDays: "",
@@ -35,11 +39,10 @@ const CreateTrip = () => {
   };
 
   const generateTrip = async () => {
-
     const user = localStorage.getItem("user");
 
-    if(!user){
-        return setOpenDialog(true);
+    if (!user) {
+      return setOpenDialog(true);
     }
     if (
       !formData.destination ||
@@ -60,18 +63,39 @@ const CreateTrip = () => {
 
     const DYNAMIC_PROMPT = `Generate a travel plan for Location: ${formData?.destination?.label} for ${formData?.noOfDays} days for a ${formData?.traveler} traveler on ${formData?.budget} budget. Return the result strictly as a single JSON object using camelCase keys, the travel plan with trip note and must feature hotelsOptions array, each hotel with hotelName, hotelAddress, priceRange, imageUrl, rating, description, and a coordinates, alongside an itinerary array of daily plans. Each day must include a dayNumber, theme, and an activities array, where each activity contains activityName, description, imageUrl, ticketPrice, timeRange, timeToTravel and coordinates`;
 
-    try{
-
-       const tripData = await generateTripWithAI(DYNAMIC_PROMPT)
-        setLoading(false)
+    try {
+      const tripData = await generateTripWithAI(DYNAMIC_PROMPT);
+      //    console.log("Trip Data Log: ",tripData)
+      saveToDB(tripData);
+    } catch (error) {
+      console.log("AI Error:", error);
+      toast.error(
+        error.message?.includes("429")
+          ? "Rate limit hit! wait 60s."
+          : "Generation failed.",
+      );
     }
+  };
 
-    catch (error)
-    {
-          
-           console.log("AI Error:", error)
-           toast.error(error.message?.includes('429') ? "Rate limit hit! wait 60s." : "Generation failed.");
+  const saveToDB = async (tripData) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const docId = Date.now().toString();
 
+      // Add a new document in collection "cities"
+      await setDoc(doc(db, "trips-ai", docId), {
+        userSelection: formData,
+        tripData: tripData,
+        userEmail: user?.email,
+        id: docId,
+      });
+      setLoading(false);
+      toast.success("Trip Generated");
+      navigate("/trips/" + docId);
+    } catch (error) {
+      setLoading(false);
+      console.error("FULL DATABASE ERROR:", error);
+      toast.error("Failed to save to Database.");
     }
   };
 
@@ -84,12 +108,15 @@ const CreateTrip = () => {
             <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
           </div>
         </div>
-        <h3 className="mt-8 text-gray-900">Curating your trip to {formData.destination?.label?.split(',')[0]}...</h3>
-        <p className="mt-2 text-gray-500 animate-pulse">Our AI is finding the best stays and hidden gems...</p>
+        <h3 className="mt-8 text-gray-900">
+          Curating your trip to {formData.destination?.label?.split(",")[0]}...
+        </h3>
+        <p className="mt-2 text-gray-500 animate-pulse">
+          Our AI is finding the best stays and hidden gems...
+        </p>
       </div>
     );
   }
-
 
   //Planner Form View
   return (
@@ -238,7 +265,11 @@ const CreateTrip = () => {
           </div>
         </div>
       </div>
-      <LoginDialog open={openDialog} onClose={()=>setOpenDialog(false)} onLoginSuccess={generateTrip}/>
+      <LoginDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        onLoginSuccess={generateTrip}
+      />
     </div>
   );
 };
