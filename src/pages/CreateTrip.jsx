@@ -238,7 +238,7 @@ const CreateTrip = () => {
           </div>
         </div>
       </div>
-      <LoginDialog open={openDialog} onClose={()=>setOpenDialog(false)} />
+      <LoginDialog open={openDialog} onClose={()=>setOpenDialog(false)} onLoginSuccess={generateTrip}/>
     </div>
   );
 };
