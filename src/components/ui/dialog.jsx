@@ -4,7 +4,6 @@ import { X } from "lucide-react"
 import { clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-// Helper for Tailwind classes
 function cn(...inputs) {
   return twMerge(clsx(inputs))
 }
@@ -18,7 +17,7 @@ const DialogOverlay = React.forwardRef(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -52,6 +51,14 @@ const DialogHeader = ({ className, ...props }) => (
 )
 DialogHeader.displayName = "DialogHeader"
 
+const DialogFooter = ({ className, ...props }) => (
+  <div
+    className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)}
+    {...props}
+  />
+)
+DialogFooter.displayName = "DialogFooter"
+
 const DialogTitle = React.forwardRef(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
@@ -78,6 +85,7 @@ export {
   DialogTrigger,
   DialogContent,
   DialogHeader,
+  DialogFooter,
   DialogTitle,
   DialogDescription,
 }
