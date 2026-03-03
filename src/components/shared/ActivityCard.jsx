@@ -17,8 +17,8 @@ const ActivityCard = ({activity}) => {
             <div className='block border border-gray-200 rounded-lg hover:shadow-2xs focus:outline-hidden overflow-hidden'>
                 <div className='relative flex flex-col sm:flex-row sm:items-center overflow-hidden'>
                     <img src={`/private.png`} alt={'actImg'} className='h-32 sm:w-48 sm:h-full sm:absolute inset-0 object-cover' />
-                    <div>
-                        <div>
+                    <div className='grow p-4 sm:ms-48'>
+                        <div className='min-h-24 flex flex-col sm:justify-center'>
                             <h6>{activity.activityName}<span className='text-gray-500'>💸{activity.ticketPrice}</span></h6>
                             <p className='mt-1'>{activity.description}</p>
                         </div>
