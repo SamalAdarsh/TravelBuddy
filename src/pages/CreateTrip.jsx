@@ -66,7 +66,7 @@ const CreateTrip = () => {
     try {
       const tripData = await generateTripWithAI(DYNAMIC_PROMPT);
       //    console.log("Trip Data Log: ",tripData)
-      saveToDB(tripData);
+      await saveToDB(tripData);
     } catch (error) {
       console.log("AI Error:", error);
       toast.error(
@@ -82,7 +82,7 @@ const CreateTrip = () => {
       const user = JSON.parse(localStorage.getItem("user"));
       const docId = Date.now().toString();
 
-      // Add a new document in collection "cities"
+     
       await setDoc(doc(db, "trips-ai", docId), {
         userSelection: formData,
         tripData: tripData,
