@@ -15,6 +15,7 @@ import {
 import HotelCard from "@/components/shared/HotelCard";
 
 import Autoplay from "embla-carousel-autoplay";
+import TripStats from "@/components/shared/TripStats";
 
 const TripDetails = () => {
   const { tripId } = useParams();
@@ -97,6 +98,7 @@ const TripDetails = () => {
                     ))}
                   </CarouselContent>
                 </Carousel>
+                <TripStats trip={trip}/>
               </div>
             </div>
           </div>
