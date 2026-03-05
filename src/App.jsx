@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import CreateTrip from "./pages/CreateTrip";
 import { Toaster } from "./components/ui/sonner";
 import TripDetails from "./pages/TripDetails";
+import MyTrips from "./pages/MyTrips";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/create-trip" element={<CreateTrip />} />
           <Route path="/trips/:tripId" element={<TripDetails />} />
+           <Route path="/my-trips" element={<MyTrips />} />
       </Routes>
     </>
   );

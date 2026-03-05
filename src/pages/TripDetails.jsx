@@ -44,11 +44,11 @@ const TripDetails = () => {
   }, [tripId]);
 
   useEffect(() => {
-    if (!trip?.userSelection?.destination?.value?.terms[0].value) return;
+    if (!trip?.userSelection?.destination?.label) return;
 
     const loadPhoto = async () => {
       const photoUrl = await getPLacePhoto(
-        trip?.userSelection?.destination?.value?.terms[0].value,
+        trip?.userSelection?.destination?.label,
       );
       setPlacePhoto(photoUrl);
     };

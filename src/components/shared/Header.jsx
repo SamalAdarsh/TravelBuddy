@@ -41,7 +41,7 @@ const Header = () => {
 
       {/* Buttons & Profile*/}
       <div className="flex gap-x-4 sm:gap-x-8">
-        <Button variant="outline" className="mt-1 bg-transparent">
+        <Button onClick={()=>navigate('create-trip')} variant="outline" className="mt-1 bg-transparent">
           <Plus />
           Create Trip
         </Button>
@@ -63,7 +63,7 @@ const Header = () => {
                 <DropdownMenuContent>
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>My Trips</DropdownMenuItem>
+                  <DropdownMenuItem onClick={()=>navigate('/my-trips')}>My Trips</DropdownMenuItem>
                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
