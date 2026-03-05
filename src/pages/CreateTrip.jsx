@@ -1,7 +1,7 @@
 import { BUDGET_OPTIONS, traveler_OPTIONS } from "@/assets/data";
 import LoginDialog from "@/components/shared/LoginDialog";
 import { placesApiKey } from "@/lib/constants";
-import { generateTripWithAI } from "@/services/AIModel";
+import { generateTripWithAI } from "@/services/aiModel";
 import { ArrowRight, Calendar, CheckCircle, Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
