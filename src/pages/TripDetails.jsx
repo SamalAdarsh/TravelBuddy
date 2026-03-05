@@ -16,11 +16,13 @@ import HotelCard from "@/components/shared/HotelCard";
 
 import Autoplay from "embla-carousel-autoplay";
 import TripStats from "@/components/shared/TripStats";
+import { getPLacePhoto } from "@/services/placePhotoApi";
 
 const TripDetails = () => {
   const { tripId } = useParams();
   const [trip, setTrip] = useState([]);
   const navigate = useNavigate();
+  const [placePhoto, setPlacePhoto] = useState("");
 
   const fetchTripData = async () => {
     const docRef = doc(db, "trips-ai", tripId);
@@ -41,13 +43,26 @@ const TripDetails = () => {
     }
   }, [tripId]);
 
+  useEffect(() => {
+    if (!trip?.userSelection?.destination?.value?.terms[0].value) return;
+
+    const loadPhoto = async () => {
+      const photoUrl = await getPLacePhoto(
+        trip?.userSelection?.destination?.value?.terms[0].value,
+      );
+      setPlacePhoto(photoUrl);
+    };
+
+    loadPhoto();
+  }, [trip]);
+
   return (
     trip && (
       <div>
         <div className="min-h-screen bg-background">
           <div className="relative h-88 md:h-111 bg-gray-900">
             <img
-              src={"/private.png"}
+              src={placePhoto ? placePhoto : "/private.png"}
               alt=""
               className="w-full h-full object-cover opacity-60"
             />
@@ -98,7 +113,7 @@ const TripDetails = () => {
                     ))}
                   </CarouselContent>
                 </Carousel>
-                <TripStats trip={trip}/>
+                <TripStats trip={trip} />
               </div>
             </div>
           </div>
