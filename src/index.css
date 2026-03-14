@@ -3,7 +3,10 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
+/* @custom-variant dark (&:is(.dark *)); */
+
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
     --radius-sm: calc(var(--radius) - 4px);
@@ -54,15 +57,18 @@
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
+    /* --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0); */
+   --primary: oklch(0.55 0.22 285);
+    --primary-foreground: oklch(1 0 0);
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.556 0 0);
     --accent: oklch(0.97 0 0);
     --accent-foreground: oklch(0.205 0 0);
-    --destructive: #4f3af5;
+    /* --destructive: #4f3af5; */
+    --destructive: oklch(0.55 0.25 270);
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
     --ring: oklch(0.708 0 0);
@@ -81,7 +87,7 @@
     --sidebar-ring: oklch(0.708 0 0);
 }
 
-.dark {
+/* .dark {
     --background: oklch(0.145 0 0);
     --foreground: oklch(0.985 0 0);
     --card: oklch(0.205 0 0);
@@ -113,9 +119,25 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+} */
+
+/* src/index.css */
+.dark {
+    /* 1. Deep Dark Background (matches Pic 1) */
+    --background: oklch(0.12 0.02 260); 
+    --foreground: oklch(0.98 0.01 260);
+    
+    /* 2. THE PURPLE COLOR: Rich Indigo/Purple shade for dark mode primary */
+    --primary: oklch(0.65 0.22 285); 
+    --primary-foreground: oklch(1 0 0);
+    
+    /* 3. Muted elements with indigo hint */
+    --card: oklch(0.18 0.03 260); 
+    --border: oklch(1 0 0 / 12%);
+    --muted-foreground: oklch(0.7 0.02 260);
 }
 
-@layer base {
+/* @layer base {
   * {
     @apply border-border outline-ring/50;
     }
@@ -123,6 +145,17 @@
     @apply bg-background text-foreground;
     font-family: "Geist",sans-serif;
     }
+} */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    /* 1. Added transition-colors for a smooth fade effect */
+    @apply bg-background text-foreground transition-colors duration-300; 
+    font-family: "Geist", sans-serif;
+  }
 }
 
 @layer components {
@@ -152,7 +185,7 @@
 }
 
 
-@layer utilities {
+/* @layer utilities {
   h1 {
     @apply text-[36px] md:text-[44px] font-bold;
   }
@@ -173,5 +206,27 @@
   }
   p {
     @apply leading-[1.3] text-[14px] text-gray-500;
+  }
+} */
+
+
+@layer utilities {
+  h1 {
+    /* Scaled down slightly for a cleaner, centered look */
+    @apply text-[32px] md:text-[48px] font-bold tracking-tight;
+  }
+  h2 {
+    @apply text-[28px] md:text-[32px] font-bold;
+  }
+  h3 {
+    @apply text-[20px] md:text-[24px] font-bold;
+  }
+  h4 {
+    @apply text-[16px] md:text-[18px] font-bold;
+  }
+  
+  /* UPDATE: More readable, professional paragraph style from Pic 1 */
+  p {
+    @apply leading-relaxed text-[16px] text-gray-600 dark:text-gray-400;
   }
 }
